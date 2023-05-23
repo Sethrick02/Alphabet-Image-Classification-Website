@@ -1,0 +1,62 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+header {
+    text-align: center;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+#dropzone {
+    width: 300px;
+    height: 300px;
+    border: 2px dashed #6c757d;
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+#uploadImage {
+    max-width: 100%;
+    max-height: 100%;
+    display: none;
+}
+
+#dropzone p {
+    text-align: center;
+}
+
+button {
+    display: block;
+    margin: 10px auto;
+    padding: 10px 20px;
+    font-size: 1em;
+    border: none;
+    border-radius: 5px;
+    color: white;
+}
+
+#predictButton {
+    background-color: #007bff;
+}
+
+#resetButton {
+    background-color: #dc3545;
+}
+
+#predictionDisplay {
+    margin-top: 30px;
+    padding: 20px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    text-align: center;
+}
+
+#submitCorrection {
+    background-color: green;
+}
