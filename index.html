@@ -9,20 +9,21 @@
 
 <body>
     <header>
-        <h1>Image Predictor</h1>
+        <h1>Image Classification</h1>
     </header>
     <main>
         <div id="dropzone">
             <img id="uploadImage" src="#" alt="uploaded image" />
-            <p>Drag and Drop Image Here</p><br>
-            <p>OR</p><br>
+            <p>Drag and Drop Image Here or Click Anywhere to Browse<br><br>
+                This Program Only Accepts: 'png', 'jpg', & 'jpeg' Files</p>
             <input type="file" id="fileInput" />
         </div>
-        <button id="predictButton">Predict</button>
+        <button id="predictButton">Classify</button>
         <button id="resetButton">Reset</button>
         <div id="predictionDisplay">
             <p id="predictionText">Prediction will be displayed here</p>
         </div>
+        <div id="loadingIcon"></div>
     </main>
     <script src="app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
