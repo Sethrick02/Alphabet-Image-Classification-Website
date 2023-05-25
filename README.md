@@ -1,2 +1,1 @@
-# Image-Classification
-Simple UI website for drag &amp; drop image classification IN PROGRESS
+Alphabetical Image Classification
