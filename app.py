@@ -1,40 +1,47 @@
-from flask import Flask, request, jsonify
-from werkzeug.utils import secure_filename
-from keras.models import load_model
-from keras.preprocessing import image
+from flask import Flask, jsonify, request, render_template
+import tensorflow.keras as keras
+from PIL import Image
 import numpy as np
 import os
-
-UPLOAD_FOLDER = 'uploads'
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+import tempfile
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-model = load_model('model.h5')
 
 
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+def load_model():
+    model = keras.models.load_model('model/alphabet_model.h5')
+    return model
+
+
+def predict_image(filepath):
+    model = load_model()
+    img = Image.open(filepath).convert('L')
+    img = img.resize((28, 28))
+    # Rotate the image as it was done in training
+    img = np.rot90(np.array(img), -1)
+    img = img / 255.0
+    img = img.reshape(1, 28, 28, 1)  # add the channels dimension
+    prediction = model.predict(img).tolist()[0]
+    return prediction.index(max(prediction))
+
+
+@app.route('/')
+def home():
+    return render_template('index.html')
 
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    if 'file' not in request.files:
-        return jsonify({'error': 'No file part in the request'}), 400
-    file = request.files['file']
-    if file.filename == '':
-        return jsonify({'error': 'No selected file'}), 400
-    if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(file_path)
-        img = image.load_img(file_path, target_size=(224, 224))
-        x = image.img_to_array(img)
-        x = np.expand_dims(x, axis=0)
-        x = preprocess_input(x)
-        preds = model.predict(x)
-        return jsonify({'predictions': preds.tolist()}), 200
+    try:
+        file = request.files['file']
+        suffix = os.path.splitext(file.filename)[1]
+        with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as temp:
+            file.save(temp.name)
+            prediction = predict_image(temp.name)
+        return jsonify({'prediction': prediction})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 
-if __name__ == "__main__":
-    app.run(port=5000, debug=False)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000, debug=False)
