@@ -10,7 +10,7 @@ To Run Program:
     - Flask
     - PIL (Python Imaging Library)
 
-2. Create a directory structure like the following:
+2. The directory structure should look like the following:
 
     ```
     .
